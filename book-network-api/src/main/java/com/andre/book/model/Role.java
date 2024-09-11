@@ -1,6 +1,5 @@
-package com.andre.book.role;
+package com.andre.book.model;
 
-import com.andre.book.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

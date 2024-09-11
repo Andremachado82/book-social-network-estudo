@@ -1,6 +1,5 @@
-package com.andre.book.user;
+package com.andre.book.model;
 
-import com.andre.book.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;

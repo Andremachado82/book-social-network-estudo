@@ -1,6 +1,6 @@
 package com.andre.book.repository;
 
-import com.andre.book.user.User;
+import com.andre.book.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

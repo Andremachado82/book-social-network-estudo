@@ -1,6 +1,6 @@
 package com.andre.book.repository;
 
-import com.andre.book.role.Role;
+import com.andre.book.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

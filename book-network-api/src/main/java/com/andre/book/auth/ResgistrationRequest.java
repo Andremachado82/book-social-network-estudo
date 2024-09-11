@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public record ResgistratioRequest(
+public record ResgistrationRequest(
 
         @NotEmpty(message = "Firstname is mandatory")
         @NotBlank(message = "Firstname is mandatory")

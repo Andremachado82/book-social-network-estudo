@@ -17,7 +17,7 @@ public class AuthenticationController {
 
     @PostMapping("register")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<?> register(@RequestBody @Valid ResgistratioRequest request) {
+    public ResponseEntity<?> register(@RequestBody @Valid ResgistrationRequest request) {
         authenticationService.register(request);
         return ResponseEntity.accepted().build();
     }

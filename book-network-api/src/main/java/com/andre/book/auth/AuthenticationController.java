@@ -1,5 +1,7 @@
 package com.andre.book.auth;
 
+import com.andre.book.auth.dto.AuthenticationRequest;
+import com.andre.book.auth.dto.AuthenticationResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -21,5 +23,12 @@ public class AuthenticationController {
     public ResponseEntity<?> register(@RequestBody @Valid ResgistrationRequest request) throws MessagingException {
         authenticationService.register(request);
         return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("/authenticated")
+    public ResponseEntity<AuthenticationResponse> authenticate(
+            @RequestBody @Valid AuthenticationRequest request
+    ) {
+        return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 }

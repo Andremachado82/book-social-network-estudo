@@ -1,5 +1,6 @@
 package com.andre.book.auth;
 
+import com.andre.book.email.EmailService;
 import com.andre.book.model.Token;
 import com.andre.book.model.User;
 import com.andre.book.repository.RoleRepository;
@@ -22,6 +23,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
+    private final EmailService emailService;
 
     public void register(@Valid ResgistrationRequest request) {
         var userRole = roleRepository.findByName("USER")

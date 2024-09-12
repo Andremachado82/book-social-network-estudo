@@ -1,13 +1,16 @@
 package com.andre.book.auth;
 
 import com.andre.book.email.EmailService;
+import com.andre.book.email.EmailTemplateName;
 import com.andre.book.model.Token;
 import com.andre.book.model.User;
 import com.andre.book.repository.RoleRepository;
 import com.andre.book.repository.TokenRepository;
 import com.andre.book.repository.UserRepository;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +28,10 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
     private final EmailService emailService;
 
-    public void register(@Valid ResgistrationRequest request) {
+    @Value("${application.mailing.frontend.activation-url}")
+    private String activationUrl;
+
+    public void register(@Valid ResgistrationRequest request) throws MessagingException {
         var userRole = roleRepository.findByName("USER")
                 // todo - better exception hadling
                 .orElseThrow(() -> new IllegalStateException("ROLE USER was not initialized"));
@@ -43,9 +49,16 @@ public class AuthenticationService {
         sendValidationEmail(user);
     }
 
-    private void sendValidationEmail(User user) {
+    private void sendValidationEmail(User user) throws MessagingException {
         var newToken = generateAndSaveActivationToken(user);
-        // send email
+        emailService.sendEmail(
+                user.getEmail(),
+                user.getFullName(),
+                EmailTemplateName.ACTIVATE_ACCOUNT,
+                activationUrl,
+                newToken,
+                "Account activation"
+        );
     }
 
     private String generateAndSaveActivationToken(User user) {

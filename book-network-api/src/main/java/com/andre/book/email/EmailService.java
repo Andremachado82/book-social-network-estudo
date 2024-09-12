@@ -24,7 +24,7 @@ public class EmailService {
     private final SpringTemplateEngine templateEngine;
 
     @Async
-    public void setMail(
+    public void sendEmail(
             String to,
             String username,
             EmailTemplateName emailTemplate,

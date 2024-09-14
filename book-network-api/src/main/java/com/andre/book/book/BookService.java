@@ -1,6 +1,8 @@
 package com.andre.book.book;
 
 import com.andre.book.common.PageResponse;
+import com.andre.book.history.BooTransactionHistoryRepository;
+import com.andre.book.history.BookTransactionHistory;
 import com.andre.book.model.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.andre.book.book.BookEspecification.withOwnerId;
 
@@ -21,6 +22,7 @@ import static com.andre.book.book.BookEspecification.withOwnerId;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final BooTransactionHistoryRepository transactionHistoryRepository;
     private final BookMapper bookMapper;
 
     public Integer saveBook(BookRequest request, Authentication connectedUser) {
@@ -69,6 +71,24 @@ public class BookService {
                 books.getTotalPages(),
                 books.isFirst(),
                 books.isLast()
+        );
+    }
+
+    public PageResponse<BorrowedBookResponse> findAllBorrowedBooks(int page, int size, Authentication connectedUser) {
+        User user = ((User) connectedUser.getPrincipal());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Page<BookTransactionHistory> allBorrowedBooks = transactionHistoryRepository.findAllBorrowedBooks(pageable, user.getId());
+        List<BorrowedBookResponse> bookResponse = allBorrowedBooks.stream()
+                .map(bookMapper::toBorrowedBookResponse)
+                .toList();
+        return new PageResponse<>(
+                bookResponse,
+                allBorrowedBooks.getNumber(),
+                allBorrowedBooks.getSize(),
+                allBorrowedBooks.getTotalElements(),
+                allBorrowedBooks.getTotalPages(),
+                allBorrowedBooks.isFirst(),
+                allBorrowedBooks.isLast()
         );
     }
 }

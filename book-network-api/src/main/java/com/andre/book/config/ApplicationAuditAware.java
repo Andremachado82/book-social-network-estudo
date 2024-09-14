@@ -1,7 +1,6 @@
 package com.andre.book.config;
 
 import com.andre.book.model.User;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;

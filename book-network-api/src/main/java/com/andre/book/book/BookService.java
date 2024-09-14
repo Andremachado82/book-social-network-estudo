@@ -1,6 +1,7 @@
 package com.andre.book.book;
 
 import com.andre.book.common.PageResponse;
+import com.andre.book.exception.OperationNotPermittedException;
 import com.andre.book.history.BooTransactionHistoryRepository;
 import com.andre.book.history.BookTransactionHistory;
 import com.andre.book.model.User;
@@ -14,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.andre.book.book.BookEspecification.withOwnerId;
 
@@ -108,5 +110,17 @@ public class BookService {
                 allReturnedBooks.isFirst(),
                 allReturnedBooks.isLast()
         );
+    }
+
+    public Integer updateShareableStatus(Integer bookdId, Authentication connectedUser) {
+        Book book = bookRepository.findById(bookdId)
+                .orElseThrow(() -> new EntityNotFoundException("No book found with ID:: " + bookdId));
+        User user = ((User) connectedUser.getPrincipal());
+        if (!Objects.equals(book.getOwner().getBooks(), user.getId())) {
+            throw new OperationNotPermittedException("You cannot update books shareable status");
+        }
+        book.setShareable(!book.isShareable());
+        bookRepository.save(book);
+        return bookdId;
     }
 }
